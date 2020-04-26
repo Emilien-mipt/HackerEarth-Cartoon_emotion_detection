@@ -1,2 +1,4 @@
+imageai>=2.1.0
 labelImg
 opencv-python
+tensorflow-gpu==1.13.1
