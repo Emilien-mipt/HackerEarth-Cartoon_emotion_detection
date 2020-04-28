@@ -8,6 +8,6 @@ trainer.setTrainConfig(
     object_names_array=["Tom", "Jerry"],
     batch_size=2,
     num_experiments=100,
-    train_from_pretrained_model="pretrained-yolov3.h5",
+    train_from_pretrained_model="./models/pretrained-yolov3.h5",
 )
 trainer.trainModel()

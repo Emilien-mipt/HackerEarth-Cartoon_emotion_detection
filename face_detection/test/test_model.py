@@ -2,8 +2,8 @@ from imageai.Detection.Custom import CustomObjectDetection
 
 detector = CustomObjectDetection()
 detector.setModelTypeAsYOLOv3()
-detector.setModelPath("../detection_model-ex-045--loss-0003.172.h5")
-detector.setJsonPath("../detection_config.json")
+detector.setModelPath("../models/detection_model-ex-045--loss-0003.172.h5")
+detector.setJsonPath("../models/detection_config.json")
 detector.loadModel()
 detections, extracted_objects_array = detector.detectObjectsFromImage(
     input_image="test_image.jpg",
