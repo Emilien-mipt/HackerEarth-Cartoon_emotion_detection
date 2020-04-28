@@ -12,3 +12,6 @@ __pycache__/
 
 # isort configs
 .isort.cfg
+
+# saved models
+*.h5
