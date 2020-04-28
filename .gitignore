@@ -1,0 +1,17 @@
+# data
+data/
+
+# mypy cache
+.mypy_cache/
+
+# Pycharm cache
+.idea/
+
+# python bins
+__pycache__/
+
+# isort configs
+.isort.cfg
+
+# saved models
+*.h5
