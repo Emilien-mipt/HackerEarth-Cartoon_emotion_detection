@@ -3,8 +3,8 @@ import os
 
 from imageai.Detection.Custom import CustomObjectDetection
 
-TRAIN_PATH = "../data/train_frames/"
-VAL_PATH = "../data/val_frames/"
+TRAIN_PATH = "../../data/train_frames/"
+VAL_PATH = "../../data/val_frames/"
 
 TRAIN_OUTPUT_PATH = "../data/train_warped_frames/"
 VAL_OUTPUT_PATH = "../data/val_warped_frames/"
