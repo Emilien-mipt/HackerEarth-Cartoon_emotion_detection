@@ -99,12 +99,16 @@ class Trainer:
             print("See at ../checkpoints/weights/")
             os.makedirs(path_to_weights)
 
-        weight_name = "{}_{}_{}_epochs.pth".format(
-            model_name, optimizer_name, str(self.num_epochs)
+        weight_name = "{}_{}_{}_epochs_loss---{:.4f}_epochs_metric_loss---{:.4f}.pth".format(
+            model_name,
+            optimizer_name,
+            str(self.num_epochs),
+            self.statistic_train_loss[-1],
+            self.metric_train_loss[-1],
         )
 
         torch.save(self.model.state_dict(), os.path.join(path_to_weights, weight_name))
-        print("The trained weights of the model have been saved!")
+        print("The weights of the trained model have been saved!")
 
     def save_model(self, model_name: str, optimizer_name: str):
         """Save the weights as well as the architecture of the model."""
@@ -114,11 +118,15 @@ class Trainer:
             print("See at ../checkpoints/models/")
             os.makedirs(path_to_models)
 
-        model = "{}_{}_{}_epochs.pt".format(
-            model_name, optimizer_name, str(self.num_epochs)
+        model = "{}_{}_{}_epochs_loss---{:.4f}_epochs_metric_loss---{:.4f}.pt".format(
+            model_name,
+            optimizer_name,
+            str(self.num_epochs),
+            self.statistic_train_loss[-1],
+            self.metric_train_loss[-1],
         )
 
-        torch.save(self.model.state_dict(), os.path.join(path_to_models, model))
+        torch.save(self.model, os.path.join(path_to_models, model))
         print("The trained model has been saved!")
 
     def draw_losses(
@@ -172,8 +180,12 @@ class Trainer:
             if not os.path.exists(path_to_plots):
                 print("Creating directory to save plots...")
                 print("See at ../logs/plots/")
-            plot_name = "{}_{}_{}_epochs.png".format(
-                model_name, optimizer_name, str(self.num_epochs)
+            plot_name = "{}_{}_{}_epochs_loss---{:.4f}_epochs_metric_loss---{:.4f}.png".format(
+                model_name,
+                optimizer_name,
+                str(self.num_epochs),
+                self.statistic_train_loss[-1],
+                self.metric_train_loss[-1],
             )
             fig.savefig(os.path.join(path_to_plots, plot_name))
             print("The plots of losses have been saved!")
