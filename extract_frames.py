@@ -17,7 +17,7 @@ def capture_frames(path_input, path_output, frame_rate):
         if not ret:
             break
         if frameId % math.floor(frameRate) == 0:
-            filename = "frame%d.jpg" % count
+            filename = "test%d.jpg" % count
             count += 1
         cv2.imwrite(os.path.join(path_output, filename), frame)
     cap.release()
