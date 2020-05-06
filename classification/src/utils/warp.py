@@ -6,17 +6,20 @@ from imageai.Detection.Custom import CustomObjectDetection
 TRAIN_PATH = "../../data/train_frames/"
 VAL_PATH = "../../data/val_frames/"
 
-TRAIN_OUTPUT_PATH = "../data/train_warped_frames/"
-VAL_OUTPUT_PATH = "../data/val_warped_frames/"
+TRAIN_OUTPUT_PATH = "../../data/train_warped_frames/"
+VAL_OUTPUT_PATH = "../../data/val_warped_frames/"
+
+detection_model_path = (
+    "../../../face_detection/models/detection_model-ex-098--loss-0001.688.h5"
+)
+detection_config_path = "../../../face_detection/models/detection_config.json"
 
 
 def main():
     detector = CustomObjectDetection()
     detector.setModelTypeAsYOLOv3()
-    detector.setModelPath(
-        "../../face_detection/models/detection_model-ex-079--loss-0002.743.h5"
-    )
-    detector.setJsonPath("../../face_detection/models/detection_config.json")
+    detector.setModelPath(detection_model_path)
+    detector.setJsonPath(detection_config_path)
     detector.loadModel()
 
     path = args.set
@@ -40,7 +43,8 @@ def main():
             extract_detected_objects=True,
         )
 
-        print(detections)
+        print("Detections: ", detections)
+        print("Extracted object arrays: ", extracted_objects_array)
 
         for detection, object_path in zip(detections, extracted_objects_array):
             print(object_path)
