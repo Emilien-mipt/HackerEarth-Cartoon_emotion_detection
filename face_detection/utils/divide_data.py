@@ -2,10 +2,10 @@ import os
 import random
 import shutil
 
-images_path = "./data/images/"
-labels_path = "./data/annotations/"
-train_path = "./data/dataset/train/"
-validation_path = "./data/dataset/validation/"
+images_path = "../data/images/"
+labels_path = "../data/annotations/"
+train_path = "../data/dataset/train/"
+validation_path = "../data/dataset/validation/"
 
 
 for image_file in os.listdir(images_path):

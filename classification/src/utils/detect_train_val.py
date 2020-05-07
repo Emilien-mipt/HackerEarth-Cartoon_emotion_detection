@@ -1,7 +1,13 @@
 import argparse
 import os
+import sys
 
-from imageai.Detection.Custom import CustomObjectDetection
+sys.path.insert(
+    1,
+    "/home/etagiev/Documents/Competitions/HackerEarth/Detect_emotions_cartoons/face_detection/utils/",
+)
+
+from warp import warp, load_detector
 
 TRAIN_PATH = "../../data/train_frames/"
 VAL_PATH = "../../data/val_frames/"
@@ -9,38 +15,32 @@ VAL_PATH = "../../data/val_frames/"
 TRAIN_OUTPUT_PATH = "../../data/train_warped_frames/"
 VAL_OUTPUT_PATH = "../../data/val_warped_frames/"
 
-detection_model_path = (
-    "../../../face_detection/models/detection_model-ex-098--loss-0001.688.h5"
-)
 detection_config_path = "../../../face_detection/models/detection_config.json"
 
 
 def main():
-    detector = CustomObjectDetection()
-    detector.setModelTypeAsYOLOv3()
-    detector.setModelPath(detection_model_path)
-    detector.setJsonPath(detection_config_path)
-    detector.loadModel()
+    path_to_model = args.model
+    detector = load_detector(path_to_model, detection_config_path)
 
-    path = args.set
+    mode = args.set
     probability = args.probability
 
-    print("Warp frames from the {} set: \n".format(path))
+    print("Warp frames from the {} set: \n".format(mode))
 
-    if path == "train":
-        path = TRAIN_PATH
-        output_path = TRAIN_OUTPUT_PATH
+    if mode == "train":
+        input = TRAIN_PATH
+        output = TRAIN_OUTPUT_PATH
 
-    else:
-        path = VAL_PATH
-        output_path = VAL_OUTPUT_PATH
+    elif mode == "val":
+        input = VAL_PATH
+        output = VAL_OUTPUT_PATH
 
-    for frame in os.listdir(path):
-        detections, extracted_objects_array = detector.detectObjectsFromImage(
-            input_image=os.path.join(path, frame),
-            output_image_path=os.path.join(output_path, "detected_" + frame),
-            minimum_percentage_probability=probability,
-            extract_detected_objects=True,
+    for frame in os.listdir(input):
+        print("Start warping frame {} ...".format(frame))
+        input_path = os.path.join(input, frame)
+        output_path = os.path.join(output, "detected_" + frame)
+        detections, extracted_objects_array = warp(
+            detector, probability, input_path, output_path
         )
 
         print("Detections: ", detections)
@@ -61,6 +61,12 @@ def main():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Choose the set (train or validation) to warp"
+    )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default="../../../face_detection/models/detection_model-ex-098--loss-0001.688.h5",
+        help="Choose the detection model",
     )
     parser.add_argument(
         "--set", type=str, default="train", help="The set (train or val) to warp",

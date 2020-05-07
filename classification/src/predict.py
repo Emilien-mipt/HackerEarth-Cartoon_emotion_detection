@@ -1,19 +1,26 @@
 import argparse
 import os
 import re
+import sys
 
 import pandas as pd
 import torch
-from imageai.Detection.Custom import CustomObjectDetection
 from PIL import Image
 from torchvision import transforms
+
+sys.path.insert(
+    1,
+    "/home/etagiev/Documents/Competitions/HackerEarth/Detect_emotions_cartoons/face_detection/utils/",
+)
+
+from warp import warp, load_detector
 
 DATA_PATH = "../data/"
 TEST_DIR = DATA_PATH + "test/"
 OUTPUT_TEST_DIR = DATA_PATH + "test_warped_frames/"
 
 MODEL_DETECTION_DIR = "../../face_detection/models/"
-DETECTION_CONFIG = "../../face_detection/models/detection_config.json"
+detection_config_path = "../../face_detection/models/detection_config.json"
 
 MODEL_CLASSIFICATION_DIR = "../checkpoints/models/"
 
@@ -36,17 +43,6 @@ def natural_keys(text):
     float regex comes from https://stackoverflow.com/a/12643073/190597
     """
     return [atof(c) for c in re.split(r"[+-]?([0-9]+(?:[.][0-9]*)?|[.][0-9]+)", text)]
-
-
-def _load_detector(path_to_model: str, path_to_config: str):
-    print("Loading the face detector...")
-    detector = CustomObjectDetection()
-    detector.setModelTypeAsYOLOv3()
-    detector.setModelPath(path_to_model)
-    detector.setJsonPath(path_to_config)
-    detector.loadModel()
-    print("The detector has been loaded!")
-    return detector
 
 
 def _load_classifier(path_to_model: str):
@@ -86,12 +82,13 @@ def make_prediction(detector, detection_probability, classifier, data_transform)
     for frame in list_frames:
         print("Start warping frame {} ...".format(frame))
         frame_name.append(frame)
-        detections, extracted_objects_array = detector.detectObjectsFromImage(
-            input_image=os.path.join(TEST_DIR, frame),
-            output_image_path=os.path.join(OUTPUT_TEST_DIR, "detected_" + frame),
-            minimum_percentage_probability=detection_probability,
-            extract_detected_objects=True,
+        input_path = os.path.join(TEST_DIR, frame)
+        output_path = os.path.join(OUTPUT_TEST_DIR, "detected_" + frame)
+
+        detections, extracted_objects_array = warp(
+            detector, detection_probability, input_path, output_path
         )
+
         if not detections:
             print("No one has been found on frame {}".format(frame))
             emotion_predictions.append("Unknown")
@@ -130,9 +127,8 @@ def make_submit(image_list, prediction_list):
 def main():
     # Load detector model
     detector = args.detector
-    detector_probability = args.probability
     path_to_detector = os.path.join(MODEL_DETECTION_DIR, detector)
-    face_detector = _load_detector(path_to_detector, DETECTION_CONFIG)
+    face_detector = load_detector(path_to_detector, detection_config_path)
 
     # Load classidier model
     classifier = args.classifier
@@ -142,6 +138,7 @@ def main():
     image_transform = _transform_input()
 
     # Make predictions
+    detector_probability = args.probability
     test_name_list, predictions = make_prediction(
         face_detector, detector_probability, emotion_classifier, image_transform
     )
