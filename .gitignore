@@ -13,5 +13,8 @@ __pycache__/
 # isort configs
 .isort.cfg
 
-# saved models
+# saved detection models
 *.h5
+
+# saved classification models
+classification/checkpoints
