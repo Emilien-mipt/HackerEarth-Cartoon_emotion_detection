@@ -5,7 +5,7 @@ keras==2.3.1
 labelImg
 matplotlib
 numpy
-opencv-python==4.1.2.30
+opencv-python==4.2.0.32
 pillow
 scikit-learn
 scipy
